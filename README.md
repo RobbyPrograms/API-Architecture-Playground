@@ -364,16 +364,4 @@ It's not about how many frameworks you know — **it's about how you think.**
 
 ---
 
-## 📄 License
-
-MIT
-
----
-
-## 🤝 Contributing
-
-PRs welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
----
-
 **Built to showcase real API understanding — not just syntax.**
