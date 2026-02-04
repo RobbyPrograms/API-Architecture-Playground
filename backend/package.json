@@ -4,6 +4,7 @@
   "description": "API showcase server — REST, GraphQL, WebSocket, etc.",
   "main": "index.js",
   "type": "module",
+  "engines": { "node": ">=18" },
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js"
