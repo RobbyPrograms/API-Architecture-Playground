@@ -12,6 +12,14 @@ This project is intentionally designed to answer:
 
 ---
 
+## ⚡ Quick start (Phase 1)
+
+1. **Backend** (Terminal 1): `cd backend && npm run dev` → runs at `http://localhost:3001`
+2. **Frontend** (Terminal 2): `cd frontend && npm run dev` → runs at `http://localhost:3000`
+3. Open `http://localhost:3000`, click **Send request** — you should see the REST users response.
+
+---
+
 ## 🧠 What This Project Is
 
 This is **not** a tutorial repo.  
