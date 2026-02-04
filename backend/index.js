@@ -16,6 +16,12 @@ const PORT = process.env.PORT ?? 3001;
 app.use(cors());
 app.use(express.json());
 
+// Log each request so you can see activity in Render → Logs
+app.use((req, _res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
 app.use("/api/rest", restRouter);
 app.use("/api/sse", sseRouter);
 app.use("/api/rpc", rpcRouter);
