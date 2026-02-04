@@ -1,0 +1,39 @@
+import { EventsDemo } from "./components/EventsDemo";
+
+export default function EventsPage() {
+  return (
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+      <main className="mx-auto max-w-4xl px-6 py-10">
+        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+          Async / Event-Based API
+        </h1>
+        <p className="mt-1 text-lg text-zinc-600 dark:text-zinc-400">
+          Fire-and-forget, queue, poll for result
+        </p>
+
+        <div className="mt-8 rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+            Why it exists
+          </h2>
+          <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-zinc-700 dark:text-zinc-300">
+            <li>Scalability — decouple producer and consumer</li>
+            <li>Loose coupling; retries and backpressure via queue</li>
+          </ul>
+          <h2 className="mt-4 text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+            Tradeoffs
+          </h2>
+          <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-zinc-700 dark:text-zinc-300">
+            <li>Eventually consistent; need polling or callbacks for result</li>
+          </ul>
+          <div className="mt-4 rounded-lg bg-zinc-100 p-3 font-mono text-xs dark:bg-zinc-800 dark:text-zinc-200">
+            POST /api/events/job → 202 + jobId · GET /api/events/job/:id → status + result
+          </div>
+        </div>
+
+        <div className="mt-8">
+          <EventsDemo />
+        </div>
+      </main>
+    </div>
+  );
+}

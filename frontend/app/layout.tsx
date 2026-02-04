@@ -53,6 +53,42 @@ export default function RootLayout({
             >
               SSE
             </a>
+            <a
+              href="/graphql"
+              className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+            >
+              GraphQL
+            </a>
+            <a
+              href="/rpc"
+              className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+            >
+              RPC
+            </a>
+            <a
+              href="/webhooks"
+              className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+            >
+              Webhooks
+            </a>
+            <a
+              href="/soap"
+              className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+            >
+              SOAP
+            </a>
+            <a
+              href="/grpc"
+              className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+            >
+              gRPC
+            </a>
+            <a
+              href="/events"
+              className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+            >
+              Events
+            </a>
           </div>
         </nav>
         {children}
