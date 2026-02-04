@@ -3,7 +3,8 @@
 import { useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
-const GRAPHQL_URL = `${API_URL}/api/graphql`;
+// Render/Express backend uses /graphql; Vercel serverless uses /api/graphql
+const GRAPHQL_URL = API_URL ? `${API_URL}/graphql` : "/api/graphql";
 
 const EXAMPLE_QUERY = `query {
   users {
