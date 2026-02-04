@@ -120,3 +120,5 @@ You now have a **real API** on a **real server** (Render), and a **real frontend
 - No credit card required for the free tier.
 
 If you want no spin-down, you can use **Fly.io** (or another host) and follow the same idea: deploy the `backend` folder, get the URL, set `NEXT_PUBLIC_API_URL` in Vercel, redeploy.
+
+
