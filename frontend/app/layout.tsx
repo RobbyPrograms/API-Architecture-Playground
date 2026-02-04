@@ -41,6 +41,18 @@ export default function RootLayout({
             >
               REST
             </a>
+            <a
+              href="/websocket"
+              className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+            >
+              WebSocket
+            </a>
+            <a
+              href="/sse"
+              className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+            >
+              SSE
+            </a>
           </div>
         </nav>
         {children}
