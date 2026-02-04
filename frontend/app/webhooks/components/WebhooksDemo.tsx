@@ -2,20 +2,20 @@
 
 import { useState, useEffect } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 const WEBHOOK_URL = `${API_URL}/api/webhooks/event`;
 const RECENT_URL = `${API_URL}/api/webhooks/recent`;
 
 export function WebhooksDemo() {
   const [payload, setPayload] = useState('{"event": "order.created", "orderId": "ord_123"}');
-  const [recent, setRecent] = useState<unknown[]>([]);
+  const [recent, setRecent] = useState<{ at?: string; body?: unknown }[]>([]);
   const [loading, setLoading] = useState(false);
   const [lastSent, setLastSent] = useState<unknown>(null);
 
   function fetchRecent() {
     fetch(RECENT_URL)
       .then((r) => r.json())
-      .then(setRecent)
+      .then((data: { at?: string; body?: unknown }[]) => setRecent(data))
       .catch(() => {});
   }
 
@@ -85,7 +85,7 @@ export function WebhooksDemo() {
           {recent.length === 0 ? (
             <p className="text-zinc-500">Send a webhook above to see it here.</p>
           ) : (
-            recent.map((entry: { at?: string; body?: unknown }, i) => (
+            recent.map((entry, i) => (
               <div key={i} className="mb-4 border-b border-zinc-300 pb-2 dark:border-zinc-600">
                 <span className="text-zinc-500">{entry.at}</span>
                 <pre className="mt-1">{JSON.stringify(entry.body, null, 2)}</pre>

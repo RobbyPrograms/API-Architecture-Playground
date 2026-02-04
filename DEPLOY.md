@@ -1,44 +1,17 @@
-# Deploy: API Architecture Playground
+# Deploy: API Architecture Playground (Vercel only)
 
-Deploy **backend first**, then **frontend**, so you have a backend URL to give the frontend.
+Everything runs on **Vercel** — frontend and API routes (serverless). No separate backend.
 
 ---
 
 ## Prerequisites
 
 - Code pushed to **GitHub** (this repo).
-- Accounts (free): [Railway](https://railway.app), [Vercel](https://vercel.com).
+- Account (free): [Vercel](https://vercel.com).
 
 ---
 
-## Step 1: Deploy backend (Railway)
-
-1. Go to [railway.app](https://railway.app) and sign in (GitHub is easiest).
-
-2. **New Project** → **Deploy from GitHub repo**.
-   - Authorize Railway to access GitHub if asked.
-   - Select your **API-Architecture-Playground** repo.
-
-3. Railway may deploy the **root** of the repo. We need only the backend:
-   - Open your new **service** (the deployed app).
-   - Go to **Settings** (or the service’s **⚙️**).
-   - Find **Root Directory** (or **Source**).
-   - Set it to: **`backend`**.
-   - Save. Railway will redeploy.
-
-4. **Get the public URL:**
-   - In the service, open **Settings** → **Networking** / **Public Networking**.
-   - Click **Generate Domain** (or use the one given).
-   - Copy the URL, e.g. `https://api-architecture-playground-production-xxxx.up.railway.app`.
-   - No trailing slash. This is your **backend URL**.
-
-5. (Optional) **Env:** Railway sets `PORT` for you. You don’t need to add it.
-
-6. Wait for the deploy to finish. Test: open `https://YOUR-BACKEND-URL/health` in a browser. You should see `{"ok":true,"message":"API is up"}`.
-
----
-
-## Step 2: Deploy frontend (Vercel)
+## Deploy on Vercel
 
 1. Go to [vercel.com](https://vercel.com) and sign in (GitHub is easiest).
 
@@ -46,38 +19,61 @@ Deploy **backend first**, then **frontend**, so you have a backend URL to give t
 
 3. **Configure:**
    - **Root Directory:** click **Edit**, set to **`frontend`**, confirm.
-   - **Environment Variables:** add one:
-     - **Name:** `NEXT_PUBLIC_API_URL`
-     - **Value:** your backend URL from Step 1, e.g. `https://api-architecture-playground-production-xxxx.up.railway.app`
+   - **Environment Variables:** you can leave empty. The app uses same-origin `/api/*` by default.
    - Leave **Framework Preset** as Next.js.
 
 4. Click **Deploy**. Wait for the build to finish.
 
-5. Open the Vercel URL (e.g. `https://api-architecture-playground-xxx.vercel.app`). The site should load and call your Railway backend (REST, GraphQL, etc. should work).
+5. Open the Vercel URL. REST, GraphQL, RPC, Webhooks, SOAP, gRPC, Events, and SSE all run as serverless API routes on the same domain.
 
 ---
 
-## Step 3: Point frontend at production API
+## What works on Vercel
 
-- The frontend uses `NEXT_PUBLIC_API_URL` for all API calls (REST, GraphQL, WebSocket, SSE, etc.).
-- You set it in Vercel in Step 2. If you change the backend URL later, update that env var in Vercel and **redeploy** the frontend.
+| API        | Works | Notes                                      |
+|-----------|--------|--------------------------------------------|
+| REST      | ✅     | `/api/rest/users` etc.                     |
+| GraphQL   | ✅     | `/api/graphql`                             |
+| RPC       | ✅     | `/api/rpc`                                 |
+| Webhooks  | ✅     | `/api/webhooks/event`, `/api/webhooks/recent` |
+| SOAP      | ✅     | `/api/soap`                                |
+| gRPC-style| ✅     | `/api/grpc`                                |
+| Events    | ✅     | `/api/events/job` (poll for result)       |
+| SSE       | ✅     | `/api/sse/stream` (sends 5 events then ends) |
+| WebSocket | ❌     | Not supported on serverless; see below    |
 
 ---
 
-## Troubleshooting
+## WebSocket
 
-- **CORS errors:** The backend uses `cors()` with no origin restriction, so any domain is allowed. If you locked CORS down, ensure your Vercel domain is allowed.
-- **WebSocket / SSE:** Railway supports WebSockets. The frontend turns `NEXT_PUBLIC_API_URL` into `wss://...` when needed, so as long as the backend URL is correct, WS and SSE should work.
-- **404 on backend:** Confirm **Root Directory** is `backend` on Railway and that the deploy finished.
-- **Frontend shows wrong API:** Redeploy the frontend after changing `NEXT_PUBLIC_API_URL` on Vercel.
+WebSocket needs a **long-lived connection**, which serverless doesn’t support. On the deployed site, the WebSocket page shows a notice and the Connect button is disabled.
+
+To try WebSocket locally, run the **separate backend** (the `backend` folder with Node + Express + `ws`) and set:
+
+- **Environment variable:** `NEXT_PUBLIC_API_URL=http://localhost:3001`  
+  (and restart the frontend dev server).
+
+---
+
+## Optional: use a separate backend (e.g. Railway)
+
+If you later deploy the `backend` folder (e.g. on Railway) and want the frontend to call it:
+
+1. Deploy the backend and get its URL.
+2. In Vercel → your project → **Settings** → **Environment Variables**, add:
+   - **Name:** `NEXT_PUBLIC_API_URL`
+   - **Value:** your backend URL (e.g. `https://xxx.railway.app`), no trailing slash.
+3. Redeploy the frontend.
+
+Then REST, GraphQL, WebSocket, etc. will use that backend instead of the serverless `/api` routes.
 
 ---
 
 ## Summary
 
-| What   | Where   | Root directory | Env / URL |
-|--------|--------|----------------|-----------|
-| Backend | Railway | `backend`      | (PORT set by Railway) |
-| Frontend | Vercel | `frontend`     | `NEXT_PUBLIC_API_URL` = your Railway backend URL |
+| Deploy mode   | What you do |
+|---------------|-------------|
+| **Vercel only** | Root Directory = `frontend`, no env var. All APIs (except WebSocket) work via `/api/*`. |
+| **Vercel + Railway** | Deploy backend on Railway, set `NEXT_PUBLIC_API_URL` on Vercel, redeploy. WebSocket works. |
 
 After this, the playground is live. Add a database next when you’re ready.

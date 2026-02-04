@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { FlowDiagram } from "./FlowDiagram";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 const REST_BASE = `${API_URL}/api/rest`;
 
 type RequestRecord = {

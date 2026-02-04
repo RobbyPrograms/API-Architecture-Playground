@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 const SOAP_URL = `${API_URL}/api/soap`;
 
 const GET_USERS = `<?xml version="1.0"?>

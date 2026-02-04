@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { SSEDiagram } from "./SSEDiagram";
 
 function getStreamUrl() {
-  const api = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+  const api = process.env.NEXT_PUBLIC_API_URL ?? "";
   return `${api}/api/sse/stream`;
 }
 

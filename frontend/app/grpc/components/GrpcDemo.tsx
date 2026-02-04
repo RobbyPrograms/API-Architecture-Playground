@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 const GRPC_URL = `${API_URL}/api/grpc`;
 
 const METHODS = ["ListUsers", "GetUser", "CreateUser"] as const;

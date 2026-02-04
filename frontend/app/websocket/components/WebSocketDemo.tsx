@@ -3,8 +3,9 @@
 import { useState, useRef, useEffect } from "react";
 import { WebSocketDiagram } from "./WebSocketDiagram";
 
-function getWsUrl() {
-  const api = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+function getWsUrl(): string | null {
+  const api = process.env.NEXT_PUBLIC_API_URL ?? "";
+  if (!api) return null; // Serverless (Vercel) has no WebSocket support
   return api.replace(/^http/, "ws") + "/ws";
 }
 
@@ -14,10 +15,12 @@ export function WebSocketDemo() {
   const [input, setInput] = useState("");
   const [lastDirection, setLastDirection] = useState<"send" | "receive" | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
+  const wsUrl = getWsUrl();
 
   function connect() {
+    if (!wsUrl) return;
     if (wsRef.current?.readyState === WebSocket.OPEN) return;
-    const ws = new WebSocket(getWsUrl());
+    const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
     ws.onopen = () => {
@@ -69,11 +72,16 @@ export function WebSocketDemo() {
         <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
           Connection
         </h3>
+        {!wsUrl && (
+          <p className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-200">
+            WebSocket is not available on serverless (Vercel). Run the separate backend locally with <code className="font-mono">NEXT_PUBLIC_API_URL=http://localhost:3001</code> to try it.
+          </p>
+        )}
         <div className="flex flex-wrap gap-4">
           <button
             type="button"
             onClick={connect}
-            disabled={connected}
+            disabled={connected || !wsUrl}
             className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
           >
             Connect
