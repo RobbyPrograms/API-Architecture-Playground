@@ -1,128 +1,115 @@
-# Deploy to Vercel — API Architecture Playground
+# Deploy — API Architecture Playground
 
-**Frontend and backend both run on Vercel.** The “backend” is the same Next.js app: API routes under `/api/*` are serverless functions. One deploy, one host, no separate server.
+Two ways to run this project:
+
+| Option | Frontend | Backend | WebSocket |
+|--------|----------|---------|-----------|
+| **A. Vercel only** | Vercel | Vercel (serverless `/api/*`) | No |
+| **B. Vercel + Render** | Vercel | Render (Express in `backend/`) | Yes |
+
+Same repo, same frontend. Option B adds a real Node server so WebSocket and long-lived SSE work.
 
 ---
 
 ## Prerequisites
 
-- This repo pushed to **GitHub**.
-- A (free) [Vercel](https://vercel.com) account (sign in with GitHub).
+- Repo pushed to **GitHub**
+- Free accounts: [Vercel](https://vercel.com), and for Option B [Render](https://render.com)
 
 ---
 
-## Step 1: Import the project
+## Option A — Vercel only (one deploy)
 
-1. Go to [vercel.com](https://vercel.com) and sign in.
-2. Click **Add New** → **Project**.
-3. **Import** the **API-Architecture-Playground** repo (or your fork).
-4. If prompted, authorize Vercel to access your GitHub.
+**What you get:** Frontend + API routes on Vercel. No WebSocket.
 
----
+1. **Import**
+   - [vercel.com](https://vercel.com) → **Add New** → **Project** → Import **API-Architecture-Playground**.
 
-## Step 2: Configure the project
+2. **Configure**
+   - **Root Directory:** `frontend` (required).
+   - **Framework:** Next.js (default).
+   - **Environment Variables:** none.
 
-Before deploying, set:
+3. **Deploy**
+   - Click **Deploy**. Use the given URL.
 
-| Setting | Value | Why |
-|--------|--------|-----|
-| **Root Directory** | `frontend` | The Next.js app (pages + API routes) lives in the `frontend` folder. |
-| **Framework Preset** | Next.js | Leave as auto-detected. |
-| **Build Command** | (default) | `next build`. |
-| **Output Directory** | (default) | Leave blank. |
-| **Environment Variables** | (none required) | The app calls its own `/api/*` on the same domain. |
-
-To set **Root Directory**:
-
-- Click **Edit** next to “Root Directory”.
-- Enter **`frontend`** (no leading slash).
-- Confirm so the path shows as `frontend`.
-
-Do **not** set Root Directory to the repo root, or the build will fail.
+4. **Verify**
+   - Open the URL → REST page → **Send** → you should see JSON.
+   - Or open `https://YOUR-URL/api/health` → `{"ok":true,"message":"API is up"}`.
 
 ---
 
-## Step 3: Deploy
+## Option B — Vercel (frontend) + Render (backend)
 
-1. Click **Deploy**.
-2. Wait for the build to finish (usually 1–2 minutes).
-3. Open the deployment URL (e.g. `https://api-architecture-playground-xxx.vercel.app`).
+**What you get:** Frontend on Vercel, Express backend on Render. All APIs including WebSocket.
+
+### 1. Deploy frontend (Vercel)
+
+Same as Option A: import repo, **Root Directory** = `frontend`, deploy. No env vars yet.
+
+### 2. Deploy backend (Render)
+
+1. [render.com](https://render.com) → **New +** → **Web Service**.
+2. Connect GitHub → select **API-Architecture-Playground**.
+3. **Settings:**
+
+   | Field | Value |
+   |--------|--------|
+   | Root Directory | `backend` |
+   | Runtime | Node |
+   | Build Command | `npm install` |
+   | Start Command | `npm start` |
+   | Instance Type | **Free** |
+
+4. **Create Web Service** → wait for deploy → copy the URL (e.g. `https://your-app.onrender.com`), no trailing slash.
+
+5. **Test:** open `https://YOUR-RENDER-URL/health` → `{"ok":true,"message":"API is up"}`.
+
+### 3. Connect frontend to backend
+
+1. **Vercel** → your project → **Settings** → **Environment Variables**.
+2. Add:
+   - **Key:** `NEXT_PUBLIC_API_URL`
+   - **Value:** your Render URL (e.g. `https://your-app.onrender.com`).
+3. **Deployments** → **⋯** on latest → **Redeploy**.
+
+4. **Verify:** Open your Vercel URL → REST page → **Send** (should hit Render). WebSocket page → **Connect** should work.
 
 ---
 
-## Step 4: Verify
+## APIs (both options)
 
-- **Home:** The playground home page loads.
-- **REST:** Open the REST page, click **Send** (e.g. GET `/users`) — you should see JSON.
-- **Health:** Open `https://YOUR-DEPLOYMENT-URL/api/health` — should return `{"ok":true,"message":"API is up"}`.
-
-If any of these fail, see **Troubleshooting** below.
-
----
-
-## How it works (Vercel = frontend + backend)
-
-| Part | Where it runs |
-|------|----------------|
-| **Frontend** | Vercel (Next.js pages and UI). |
-| **Backend / APIs** | Vercel (Next.js API routes in the same app, under `/api/*`). |
-
-There is no separate backend server. The same Vercel deployment serves both the site and the API. The browser calls `/api/rest/users`, `/api/graphql`, etc. on the same domain.
-
----
-
-## APIs included on Vercel
-
-| API | Path | Notes |
-|-----|------|--------|
-| REST | `/api/rest/users`, `/api/rest/users/[id]` | GET list, GET one, POST create. |
-| GraphQL | `/api/graphql` | POST with `{ "query": "..." }`. |
-| RPC | `/api/rpc` | POST JSON-RPC 2.0. |
-| Webhooks | `/api/webhooks/event`, `/api/webhooks/recent` | POST to receive, GET to list recent. |
-| SOAP | `/api/soap` | POST XML. |
-| gRPC-style | `/api/grpc` | POST `{ "method", "message" }`. |
-| Events | `/api/events/job`, `/api/events/job/[id]` | POST to enqueue, GET to poll (completes after ~2s). |
-| SSE | `/api/sse/stream` | GET; returns 5 events in one response. |
-
-WebSocket is not supported on Vercel serverless; the WebSocket page shows a notice and Connect is disabled on deploy.
+| API | Path (Vercel) | Path (Render) |
+|-----|----------------|----------------|
+| REST | `/api/rest/users`, `/api/rest/users/[id]` | Same under your Render URL |
+| GraphQL | `/api/graphql` | `/graphql` |
+| RPC | `/api/rpc` | `/api/rpc` |
+| Webhooks | `/api/webhooks/event`, `/api/webhooks/recent` | Same |
+| SOAP | `/api/soap` | Same |
+| gRPC-style | `/api/grpc` | Same |
+| Events | `/api/events/job`, `/api/events/job/[id]` | Same |
+| SSE | `/api/sse/stream` | Same |
+| WebSocket | Not available (serverless) | `/ws` |
 
 ---
 
 ## Troubleshooting
 
-### Build fails: “Error creating build plan” / wrong root
-
-- Set **Root Directory** to **`frontend`** (not the repo root). Redeploy.
-
-### Build fails: TypeScript or module errors
-
-- Run locally: `cd frontend && npm run build`. Fix any errors, push, then redeploy on Vercel.
-
-### API returns 404
-
-- Confirm Root Directory is `frontend` and the deploy succeeded.
-- Try `https://YOUR-URL/api/health`; if that works, other routes are under `/api/...` (e.g. `/api/rest/users`).
-
-### CORS errors
-
-- The app uses same-origin requests (no `NEXT_PUBLIC_API_URL`), so CORS should not be an issue. If you add another frontend or domain, you may need CORS headers on API routes.
-
-### Data resets
-
-- The in-memory store is per serverless instance. For persistent data, add a database and use it in the API routes.
+| Issue | Fix |
+|--------|-----|
+| Build fails / wrong root | Set **Root Directory** to `frontend` (Vercel) or `backend` (Render). |
+| API 404 | Check root directory and that deploy finished. Try `/health` or `/api/health`. |
+| “Cannot GET /” on Render | Normal. Use `/health` or `/api/rest/users`. Root returns JSON with links. |
+| Frontend still uses old API | Set `NEXT_PUBLIC_API_URL` in Vercel and **redeploy** (not just save). |
+| Render slow first load | Free tier spins down after ~15 min; first request can take 30–60s. |
 
 ---
 
 ## Summary
 
-| Item | Value |
-|------|--------|
-| **Host** | Vercel only |
-| **Frontend** | Vercel (Next.js) |
-| **Backend** | Vercel (same app, `/api/*` routes) |
-| **Root Directory** | `frontend` |
-| **Env vars** | None required |
+| Option | Vercel | Render | Env var |
+|--------|--------|--------|---------|
+| **A** | Frontend + API (root: `frontend`) | — | None |
+| **B** | Frontend only (root: `frontend`) | Backend (root: `backend`) | `NEXT_PUBLIC_API_URL` = Render URL |
 
-**Want a separate backend?** To run the Express backend on a free host (e.g. Render) and connect your Vercel frontend, see [BACKEND-DEPLOY.md](./BACKEND-DEPLOY.md).
-
-One deploy to Vercel gives you both the frontend and the backend. Add a database or auth when you’re ready.
+Render free tier: 750 hrs/month, no card; service spins down after idle.
