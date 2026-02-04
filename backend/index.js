@@ -24,6 +24,16 @@ app.use("/api/soap", express.text({ type: ["application/xml", "text/xml"] }), so
 app.use("/api/grpc", grpcRouter);
 app.use("/api/events", eventsRouter);
 
+app.get("/", (_req, res) => {
+  res.json({
+    name: "API Architecture Playground",
+    message: "Backend is running. Try /health or use the frontend.",
+    health: "/health",
+    rest: "/api/rest/users",
+    graphql: "/graphql",
+  });
+});
+
 app.get("/health", (_req, res) => {
   res.json({ ok: true, message: "API is up" });
 });
