@@ -1,27 +1,16 @@
 import { NextResponse } from "next/server";
 
 /**
- * SSE stream. Sends a few events then ends (serverless has time limits).
+ * SSE: sends 5 events in one response body (no streaming).
+ * Avoids timer/stream issues on serverless where the connection can close early.
  */
 export async function GET() {
-  const stream = new ReadableStream({
-    start(controller) {
-      const encoder = new TextEncoder();
-      let count = 0;
-      const interval = setInterval(() => {
-        count += 1;
-        controller.enqueue(
-          encoder.encode(`data: ${JSON.stringify({ event: "tick", count, time: new Date().toISOString() })}\n\n`)
-        );
-        if (count >= 5) {
-          clearInterval(interval);
-          controller.close();
-        }
-      }, 2000);
-    },
-  });
+  const now = new Date().toISOString();
+  const body = [1, 2, 3, 4, 5]
+    .map((count) => `data: ${JSON.stringify({ event: "tick", count, time: now })}\n\n`)
+    .join("");
 
-  return new NextResponse(stream, {
+  return new NextResponse(body, {
     headers: {
       "Content-Type": "text/event-stream",
       "Cache-Control": "no-cache",
