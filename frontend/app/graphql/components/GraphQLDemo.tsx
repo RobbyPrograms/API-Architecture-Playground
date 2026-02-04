@@ -3,8 +3,7 @@
 import { useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
-// Render/Express backend uses /graphql; Vercel serverless uses /api/graphql
-const GRAPHQL_URL = API_URL ? `${API_URL}/graphql` : "/api/graphql";
+const GRAPHQL_URL = API_URL ? `${API_URL}/api/graphql` : "/api/graphql";
 
 const EXAMPLE_QUERY = `query {
   users {
@@ -36,13 +35,19 @@ export function GraphQLDemo() {
     setTimingMs(null);
     const start = performance.now();
     try {
-      const isMutation = query.trim().startsWith("mutation");
       const res = await fetch(GRAPHQL_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query }),
       });
-      const data = await res.json();
+      const contentType = res.headers.get("content-type") ?? "";
+      const text = await res.text();
+      if (!contentType.includes("application/json")) {
+        setError(`Server returned ${res.status} (expected JSON). ${text.startsWith("<") ? "You may be getting an HTML error page — check that the backend is deployed and reachable." : text.slice(0, 200)}`);
+        setLoading(false);
+        return;
+      }
+      const data = JSON.parse(text);
       setTimingMs(Math.round(performance.now() - start));
       setResponse(data);
     } catch (e) {

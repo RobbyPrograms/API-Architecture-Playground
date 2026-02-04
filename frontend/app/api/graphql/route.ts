@@ -26,11 +26,18 @@ const root = {
 };
 
 export async function POST(request: NextRequest) {
-  const body = await request.json().catch(() => ({}));
-  const { query, variables } = body ?? {};
-  if (!query) {
-    return NextResponse.json({ errors: [{ message: "query required" }] }, { status: 400 });
+  try {
+    const body = await request.json().catch(() => ({}));
+    const { query, variables } = body ?? {};
+    if (!query) {
+      return NextResponse.json({ errors: [{ message: "query required" }] }, { status: 400 });
+    }
+    const result = await graphql({ schema, source: query, rootValue: root, variableValues: variables });
+    return NextResponse.json(result);
+  } catch (err) {
+    return NextResponse.json(
+      { errors: [{ message: String((err as Error).message) }] },
+      { status: 500 }
+    );
   }
-  const result = await graphql({ schema, source: query, rootValue: root, variableValues: variables });
-  return NextResponse.json(result);
 }

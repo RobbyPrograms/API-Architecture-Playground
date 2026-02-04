@@ -46,7 +46,9 @@ app.get("/health", (_req, res) => {
 
 async function start() {
   await graphqlServer.start();
-  app.use("/graphql", cors(), express.json(), graphqlMiddleware());
+  const graphqlHandler = [cors(), express.json(), graphqlMiddleware()];
+  app.use("/graphql", ...graphqlHandler);
+  app.use("/api/graphql", ...graphqlHandler); // frontend may call this path
   const server = app.listen(PORT, () => {
     console.log(`API server running at http://localhost:${PORT}`);
   });
