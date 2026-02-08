@@ -1,5 +1,6 @@
 import { SendRequestButton } from "./components/SendRequestButton";
 import Link from "next/link";
+import { Analytics } from "@vercel/analytics/next"
 
 const apiServices = [
   { name: "REST API", desc: "HTTP · JSON · Stateless" },
