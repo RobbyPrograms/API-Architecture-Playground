@@ -3,6 +3,10 @@ import { EventsDemo } from "./components/EventsDemo";
 export default function EventsPage() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-40 left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-indigo-600/20 blur-[120px]" />
+        <div className="absolute top-1/3 right-[-200px] h-[500px] w-[500px] rounded-full bg-fuchsia-600/20 blur-[120px]" />
+      </div>
       <main className="mx-auto max-w-4xl px-6 py-10">
         <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
           Async / Event-Based API
