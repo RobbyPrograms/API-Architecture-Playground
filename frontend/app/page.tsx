@@ -24,6 +24,7 @@ export default function Home() {
       </div>
 
       <main className="relative mx-auto max-w-6xl px-6 py-20">
+        <Analytics />
         {/* ================= HERO ================= */}
         <section className="space-y-8">
           <div className="flex flex-wrap items-center gap-4">
