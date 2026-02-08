@@ -24,7 +24,7 @@ export default function Home() {
           {/* Links */}
           <div className="flex gap-4">
             <a
-              href="https://github.com/YOUR_GITHUB"
+              href="https://github.com/RobbyPrograms"
               target="_blank"
               className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-800 hover:bg-zinc-100 dark:border-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-900"
             >
