@@ -1,4 +1,4 @@
-# 🌐 API Architecture Playground
+# API Architecture Playground
 
 **A Visual, Interactive Showcase of 9 API Paradigms**
 
@@ -20,7 +20,7 @@ This project is intentionally designed to answer:
 
 ---
 
-## 🧠 What This Project Is
+## What This Project Is
 
 This is **not** a tutorial repo.  
 This is **not** a collection of disconnected demos.
@@ -39,7 +39,7 @@ Think:
 
 ---
 
-## 🖥️ What the Website Does
+## What the Website Does
 
 The website allows a user to:
 
@@ -59,7 +59,7 @@ The website allows a user to:
 
 ---
 
-## 🧱 Easiest, Cleanest Tech Stack
+## Easiest, Cleanest Tech Stack
 
 This stack is intentionally **simple, beginner-friendly, and interview-safe** — no overengineering.
 
@@ -85,7 +85,7 @@ This stack is intentionally **simple, beginner-friendly, and interview-safe** �
 
 ---
 
-## 🧠 High-Level Architecture
+## High-Level Architecture
 ```
 ┌──────────────────┐
 │     Browser      │
@@ -105,9 +105,9 @@ This stack is intentionally **simple, beginner-friendly, and interview-safe** �
 
 ---
 
-## 🔢 The 9 API Styles (What's Being Demonstrated)
+## The 9 API Styles (What's Being Demonstrated)
 
-### 1️⃣ RESTful API
+### 1️RESTful API
 **Style:** Resource-based, stateless  
 **Used for:** CRUD, public APIs
 ```
@@ -149,7 +149,7 @@ query {
 
 ---
 
-### 3️⃣ WebSocket API
+### WebSocket API
 **Style:** Persistent, bi-directional  
 **Used for:** Chat, live dashboards
 ```
@@ -175,7 +175,7 @@ GET /api/sse/stream
 
 ---
 
-### 5️⃣ Webhooks
+### Webhooks
 **Style:** Event callbacks  
 **Used for:** System integrations
 ```
@@ -188,7 +188,7 @@ POST /api/webhooks/event
 
 ---
 
-### 6️⃣ RPC API
+### RPC API
 **Style:** Action-based  
 **Used for:** Internal services
 ```json
@@ -204,7 +204,7 @@ POST /api/webhooks/event
 
 ---
 
-### 7️⃣ SOAP API
+### SOAP API
 **Style:** XML + contracts  
 **Used for:** Legacy enterprise systems
 ```xml
